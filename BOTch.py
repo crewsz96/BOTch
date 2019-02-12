@@ -1,5 +1,6 @@
 import discord
 import json
+import requests
 from discord import Game
 from discord.ext import commands
 import random
@@ -20,7 +21,6 @@ async def on_ready():
     print(bot.user.name)
     print(bot.user.id)
     print('------------')
-    await bot.change_presence(game=Game(name="Waking Up"))
     bot.loop.create_task(status_task())
 
 #----------------------------------------------#
@@ -29,12 +29,23 @@ async def status_task():
     status_messages = data["status_messages"]
 
     while True:
-        await asyncio.sleep(600)
         status_num = random.randint(0, len(status_messages) - 1)
         new_status = status_messages[status_num]
         await bot.change_presence(game=Game(name=new_status))
+        await asyncio.sleep(180)
 
 #----------------------------------------------#
+
+@bot.command(name='stop',
+            pass_context=True)
+async def stop(context):
+
+    m = context.message.author
+    if m.server_permissions.administrator or "Officer" in m.roles:
+        await bot.close()
+    else:
+        return
+#---------------------------------------------#
 
 @bot.command(name='roll',
             description='Rolls given die/dice in the format nDN with the valid die as d2,3,4,6,8,10,12,20,100,1000',
@@ -76,13 +87,17 @@ async def roll(context):
 
 #-------------------------------------------------------------#
 
-# @bot.command(name='roll',
-#             description='Rolls given die/dice in the format nDN with the valid die as d2,3,4,6,8,10,12,20,100,1000',
-#             brief='Rolls a given die/dice',
-#             aliases=['Roll', 'ROLL'],
-#             pass_context=True)
-# async def roll(context):
+@bot.command(name='puppy',
+            description='',
+            brief='',
+            aliases=['Puppy', 'PUPPY'])
+async def puppy():
 
+    url = 'https://dog.ceo/api/breeds/image/random'
+
+    response = requests.get(url)
+    image = response.json()["message"]
+    await bot.say(image)
 #--------------------------------------------------------------#
 
 bot.run(TOKEN)
