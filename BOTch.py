@@ -102,6 +102,21 @@ async def puppy():
     response = requests.get(url)
     image = response.json()["message"]
     await bot.say(image)
+
+#--------------------------------------------------------------#
+
+@bot.command(name='kitty',
+            description='',
+            brief='',
+            aliases=['Kitty', 'KITTY'])
+async def kitty():
+
+    url = 'https://api.thecatapi.com/v1/images/search'
+
+    response = requests.get(url)
+    image = response.json()[0]["url"]
+    await bot.say(image)
+
 #--------------------------------------------------------------#
 
 @bot.command(name="ud",
