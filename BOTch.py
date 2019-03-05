@@ -33,10 +33,15 @@ async def status_task():
     status_messages = data["status_messages"]
 
     while True:
-        status_num = random.randint(0, len(status_messages) - 1)
-        new_status = status_messages[status_num]
-        await bot.change_presence(game=Game(name=new_status))
-        await asyncio.sleep(180)
+
+        if datetime.datetime.today().weekday() == 3 and 19 <= datetime.datetime.time().hour() <= 23:
+            await bot.change_presence(game=Game(name="At a VTSFFC Meeting"))
+        else:
+            status_num = random.randint(0, len(status_messages) - 1)
+            new_status = status_messages[status_num]
+            await bot.change_presence(game=Game(name=new_status))
+
+        await asyncio.sleep(300)
 
 #----------------------------------------------#
 # Kill command for the bot.
@@ -141,6 +146,16 @@ async def uptime():
     current_time = time.time()
     uptime = int(round(current_time - start_time))
     await bot.say("uptime: {}".format(str(datetime.timedelta(seconds=uptime))))
+
+#-------------------------------------------------------------#
+
+@bot.command(name='source',
+            description='Source code for BOTch',
+            brief='Source code for BOTch',
+            aliases=['sc', 'sourcecode'])
+async def source():
+
+    await bot.say("You want to see my source code? :blush: well here it is: https://github.com/crewsz96/BOTch")
 
 #-------------------------------------------------------------#
 
