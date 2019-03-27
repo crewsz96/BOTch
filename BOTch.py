@@ -26,6 +26,29 @@ async def on_ready():
     bot.loop.create_task(status_task())
 
 #----------------------------------------------#
+# Greets members when they join the server.
+@bot.event
+async def on_member_join(member):
+    await bot.send_message(bot.get_channel('294890826666999811'), 'Hello ' + member.mention + '! Please take a moment to look at the rules pinned in' + bot.get_channel('294890826666999811').mention + '.')
+
+#----------------------------------------------#
+# Checks list of banned words and logs the incident. Not a comprehensive solution.
+@bot.event
+async def on_message(message):
+
+    banned_words = data["banned_words"]
+    now = datetime.datetime.now();
+    time = now.strftime("%c")
+
+    if (message.author.name == "BOTch"):
+        return
+
+    if any(word in message.content.lower() for word in banned_words):
+        await bot.send_message(bot.get_channel('559859574312665108'), message.author.name + " Said: \"" + message.content + "\" on " + time + " in channel " + message.channel.mention)
+
+    await bot.process_commands(message)
+
+#----------------------------------------------#
 # Task sets the bots "Playing" status to a random string from a list stored
 # in the config.json file.
 async def status_task():
